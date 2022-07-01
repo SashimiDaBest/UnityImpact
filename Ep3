@@ -1,0 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerMover : MonoBehaviour
+{
+    public GameObject particle;
+    GameObject player;
+    float speed = 15f;
+    float turnSpeed = 100f;
+    bool isMoving = true;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (isMoving)
+        {
+            transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        }
+        else
+        {
+            transform.Translate(Vector3.forward * 0f);
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.Rotate(0f, Time.deltaTime * -turnSpeed, 0f);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(0f, Time.deltaTime * turnSpeed, 0f);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.name == "Cylinder")
+        {
+            Debug.Log("Hit");
+            Instantiate(particle, new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z), Quaternion.identity);
+            isMoving = false;
+        }
+    }
+}
